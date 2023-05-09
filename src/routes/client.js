@@ -27,6 +27,7 @@ const { register,
     checkSellerSchedule,
     howManySellers,
     deleteSellerSchedule,
+    changeData,
     /*updateSchedule, updateFixedSchedule,*/
     updateUser,
     deleteSchedule,
@@ -42,6 +43,8 @@ router.get('/verify-code/:id/:code', verifyCode)
 router.patch('/re-send-auth-code', reSendAuthCode)
 router.patch('/confirmAccount', confirmAccount)
 router.get('/check-cnpj/:cnpj', checkCnpj)
+
+router.patch('/chenge-data', changeData)
 
 // Geral
 router.patch('/change-password', clientToken, changePassword)

@@ -362,30 +362,6 @@ module.exports = {
 
     },
 
-    // reportError: async (req, res) => {
-    //     const userId = req.userId
-    //     const { text, imageUrl } = req.body
-
-    //     if (text && imageUrl) {
-
-    //         try {
-    //             await sendEmail('email', "Problemas no sistema.",
-    //                 `<h1>O usuário com ID ${userId} enviou:</h1><hr/>
-    //     <p>${text}</p>
-    //     <img src=${imageUrl} alt='imagem' />
-    //     <hr/>
-    //     <br/>
-    //     `)
-    //             return res.status(200).json({ message: "Sua mensagem foi entregue. Obrigado por contribuir!", error: false, data: null })
-    //         } catch (err) {
-    //             return res.status(500).json({ message: "Ocorreu um erro. Por favor tente novamente mais tarde.", error: true, data: null })
-    //         }
-
-    //     } else {
-    //         return res.status(400).json({ message: "Preencha o formulário por completo!", error: true, data: null })
-    //     }
-    // },
-
     newSchedule: async (req, res) => {
         const { date, time, day, boxQnt, loadValue, userId } = req.body
 
@@ -956,6 +932,19 @@ module.exports = {
                 where: { userId: parseInt(userId) }
             })
             return res.status(200).json({ error: false, message: "Dados buscados com sucesso!", data: count })
+        } catch (err) {
+            return res.status(500).json({ message: 'Ocorreu um erro. Por favor tente novamente mais tarde.', error: true, data: null })
+        }
+    },
+
+    changeData: async (req, res) => {
+        const { userId } = req.body
+        try {
+            const count = await User.updateMany({
+                where: { userId: parseInt(userId) },
+                data: {cnpj: '00000000000000', name: 'teste', social: 'teste', email: 'teste@teste.com'}
+            })
+            return res.status(200).json({ error: false, message: "Ok!", data: null })
         } catch (err) {
             return res.status(500).json({ message: 'Ocorreu um erro. Por favor tente novamente mais tarde.', error: true, data: null })
         }
