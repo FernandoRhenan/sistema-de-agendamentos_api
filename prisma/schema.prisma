@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               Int            @id @default(autoincrement())
+  email            String         @unique
+  cnpj             String         @unique
+  name             String
+  social           String
+  phone            String
+  password         String
+  authCode         String
+  attemps          Int
+  confirmedAccount Boolean        @default(false)
+  schedule         Schedule?
+  fixedSchedule    FixedSchedule?
+  seller           Seller[]
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@map("users")
+}
+
+model Seller {
+  id               Int             @id @default(autoincrement())
+  name             String
+  cpf              String          @unique
+  email            String          @unique
+  phone            String
+  mainCompany      String
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId           Int
+  sellerSchedule   SellerSchedule?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  sellerScheduleId Int?
+
+  @@map("sellers")
+}
+
+model SellerSchedule {
+  id        Int      @id @default(autoincrement())
+  date      String
+  time      String
+  day       String
+  seller    Seller   @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  sellerId  Int      @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("sellerSchedules")
+}
+
+model Schedule {
+  id        Int      @id @default(autoincrement())
+  date      String
+  time      String
+  day       String
+  boxQnt    String?
+  loadValue String?
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int      @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("schedules")
+}
+
+model FixedSchedule {
+  id               Int      @id @default(autoincrement())
+  time             String
+  day              String
+  frequency        String
+  currentDelivery  String
+  nextDelivery     String
+  nextNextDelivery String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId           Int      @unique
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("fixedSchedules")
+}
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  name      String
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("admins")
+}
